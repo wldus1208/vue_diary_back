@@ -24,6 +24,7 @@ public class DiaryService {
 	private DiaryMapper mapper;
 
 	public List<DiaryVO> diaryList(Map<String, Object> paramMap){
+		String userId = (String) paramMap.get("userId"); // 파라미터에서 userId 가져오기
         return mapper.diaryList(paramMap);
     }
 	
@@ -36,4 +37,15 @@ public class DiaryService {
 
 		return mapper.diaryDelete(paramMap);
 	}
+	
+	public int diaryInsert(Map<String, Object> paramMap) throws Exception {
+
+		return mapper.diaryInsert(paramMap);
+	}
+
+	public int diaryUpdate(Map<String, Object> paramMap) throws Exception {
+
+		return mapper.diaryUpdate(paramMap);
+	}
+
 }

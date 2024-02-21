@@ -43,6 +43,9 @@ public class DiaryController {
 		
 		logger.info("   - paramMap : " + paramMap);
 		String title = (String) paramMap.get("title");
+		String userId = (String) paramMap.get("userId"); // 세션에서 로그인 아이디 가져오기
+	    
+	    paramMap.put("userId", userId); // paramMap에 로그인 아이디 추가
 		
 		List<DiaryVO> list = diaryService.diaryList(paramMap);		
 		
@@ -103,6 +106,42 @@ public class DiaryController {
 		logger.info("+ End " + className + ".noticeDelete");
 		
 		return resultMap;
+	}
+	
+	@RequestMapping("Save.do")
+	@ResponseBody
+	public Map<String, Object> diarySave(Model model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
+		
+		logger.info("+ Start " + className + ".diarySave");
+		logger.info("   - paramMap : " + paramMap);
+		
+		String action = (String)paramMap.get("action");
+		String resultMsg = "";
+		
+		// 사용자 정보 설정
+		paramMap.put("loginId", session.getAttribute("loginId"));
+		
+		logger.info("loginId : " + paramMap.get("loginId"));
+		logger.info("action : " + paramMap.get("action"));
+		
+		if ("I".equals(action)) {
+			// 신규 저장
+			diaryService.diaryInsert(paramMap);
+			resultMsg = "SUCCESS";
+		} else if("U".equals(action)) {
+			// 수정
+			diaryService.diaryUpdate(paramMap);
+			resultMsg = "UPDATED";
+			System.out.println(paramMap);
+		} else {
+			resultMsg = "FALSE : 등록에 실패하였습니다.";
+		}
+		
+		//결과 값 전송
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("resultMsg", resultMsg);
+	    
+	    return resultMap;
 	}
 
 }
