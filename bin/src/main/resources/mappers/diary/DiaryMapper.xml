@@ -18,12 +18,14 @@
 		    tb_detail_code dc_mood ON d.d_mood = dc_mood.detail_code AND dc_mood.group_code = '1'
 		WHERE 
     		d.loginID = #{userId}
+		<where>
 			<if test ="(title != null) and (!title.equals(''))">
-			    and (d.d_title Like CONCAT('%', #{title}, '%') or d.d_contents Like CONCAT('%', #{title}, '%'))
+			    and d.d_title  Like CONCAT('%', #{title}, '%')
 			</if>	
+		</where>
 		 ORDER BY d_diarydt DESC
 	</select>
-	   
+	
 	<!-- 단건 조회  -->
 	<select id = "diaryDetail" parameterType="java.util.Map" resultType="kr.happyjob.study.vo.diary.DiaryVO">
 		SELECT 
@@ -84,13 +86,5 @@
 				d_diarydt = #{d_diarydt}
 		WHERE	d_no = #{d_no}
 	</update>
-	
-	<!-- 다이어리 날짜 중복 입력 불가 -->
-	<select id="isDateDuplicate" resultType="int" parameterType="java.util.Map">
-	    SELECT COUNT(*)
-	    FROM tb_diary
-	    WHERE loginID = #{loginId}
-	    AND d_diarydt = #{diaryDate}
-	</select>
 
 </mapper>
